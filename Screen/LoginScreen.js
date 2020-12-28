@@ -50,13 +50,16 @@ const LoginScreen = ({navigation}) => {
     }
     formBody = formBody.join('&');
 
-    fetch('https://aboutreact.herokuapp.com/login.php', {
+    fetch('http://localhost:3000/api/v1/login', {
       method: 'POST',
-      body: formBody,
+      body: {
+        email: 'ahmed@gmail.com',
+        password: 'password'
+      },
       headers: {
         //Header Defination
-        'Content-Type':
-          'application/x-www-form-urlencoded;charset=UTF-8',
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
       },
     })
       .then((response) => response.json())
@@ -64,6 +67,7 @@ const LoginScreen = ({navigation}) => {
         //Hide Loader
         setLoading(false);
         console.log(responseJson);
+        alert(responseJson.status)
         // If server response message same as Data Matched
         if (responseJson.status == 1) {
           AsyncStorage.setItem(
