@@ -3,23 +3,28 @@
 
 // Import React and Component
 import React from 'react';
-import {View, Text, SafeAreaView} from 'react-native';
+import {View, Text, Image,KeyboardAvoidingView} from 'react-native';
 
 const TopScreenButton = () => {
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={{flex: 1, padding: 16}}>
-        
-        <Text
-          style={{
-            fontSize: 16,
-            textAlign: 'center',
-            color: 'grey',
-          }}>
-          www.thinkspot.com
-        </Text>
-      </View>
-    </SafeAreaView>
+    <View>
+          <KeyboardAvoidingView enabled>
+            <View style={{alignItems: 'center'}}>
+            <Image
+                source={require('../../Image/highlight.png')}
+                style={{
+                  width: '50%',
+                  height: 100,
+                  resizeMode: 'contain',
+                  margin: 30,
+                }}
+              />
+             
+            </View>
+            
+            
+          </KeyboardAvoidingView>
+        </View>
   );
 };
 
