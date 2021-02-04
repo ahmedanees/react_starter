@@ -4,10 +4,11 @@
 // Import React and Component
 import React from 'react';
 import {View, Text, SafeAreaView} from 'react-native';
-
+import TopScreenButton from './TopScreenButton';
 const HomeScreen = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
+      <TopScreenButton/>
       <View style={{flex: 1, padding: 16}}>
         <View
           style={{
