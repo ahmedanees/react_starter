@@ -50,7 +50,7 @@ const LoginScreen = ({navigation}) => {
     }
     formBody = formBody.join('&');
 
-    fetch('http://localhost:3000/api/v1/login', {
+    fetch('https://uat.xcarta.com/api/v1/login', {
       method: 'POST',
       body: {
         email: 'ahmed@gmail.com',

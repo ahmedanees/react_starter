@@ -13,6 +13,8 @@ import HomeScreen from './DrawerScreens/HomeScreen';
 import SettingsScreen from './DrawerScreens/SettingsScreen';
 import CustomSidebarMenu from './Components/CustomSidebarMenu';
 import NavigationDrawerHeader from './Components/NavigationDrawerHeader';
+import NavigationRightDrawerHeader from './Components/NavigationRightDrawerHeader';
+
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -27,6 +29,9 @@ const homeScreenStack = ({navigation}) => {
           title: 'Home', //Set Header Title
           headerLeft: () => (
             <NavigationDrawerHeader navigationProps={navigation} />
+          ),
+          headerRight: () => (
+            <NavigationRightDrawerHeader navigationProps={navigation} />
           ),
           headerStyle: {
             backgroundColor: '#307ecc', //Set Header color
