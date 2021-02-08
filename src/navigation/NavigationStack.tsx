@@ -4,6 +4,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SplashScreen from '../screens/SplashScreen';
+import LoginScreen from '../screens/LoginScreen';
+import RegistrationScreen from '../screens/RegistrationScreen';
 import {enableScreens} from 'react-native-screens';
 
 import Intro from '../screens/Intro';
@@ -50,9 +52,10 @@ const DrawerStackScreens = () => {
 
 const AuthStackScreens = () => {
   return (
-    <AuthStack.Navigator initialRouteName="SplashScreen" headerMode="none">
-      <ApplicationStack.Screen name="SplashScreen" component={SplashScreen} />
-
+    <AuthStack.Navigator initialRouteName="LoginScreen" headerMode="none">
+      <ApplicationStack.Screen name="login" component={LoginScreen} />
+      
+      <AuthStack.Screen name="signup" component={RegistrationScreen} />
       <AuthStack.Screen name="Intro" component={Intro} />
     </AuthStack.Navigator>
   );
