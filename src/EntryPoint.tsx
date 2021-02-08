@@ -3,6 +3,8 @@ import 'react-native-gesture-handler';
 import React, {Suspense, useEffect, useState} from 'react';
 import {Platform, SafeAreaView} from 'react-native';
 import AppNavigator from './navigation';
+import LightTheme from "./utils/LightTheme";
+
 import {Provider} from 'react-redux';
 import {Root} from 'native-base';
 import {persistor, store} from './store/store';
