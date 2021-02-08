@@ -1,0 +1,16 @@
+// login
+export const LOGIN_REQUEST = "LOGIN_REQUEST";
+export const LOGIN_RESPONSE = "LOGIN_RESPONSE";
+export const LOGIN_FAILED = "LOGIN_FAILED";
+export const LOGOUT = "LOG_OUT";
+//register
+export const REGISTER_REQUEST = "REGISTER_REQUEST";
+export const REGISTER_RESPONSE = "REGISTER_RESPONSE";
+
+//loaders
+export const LOADING_ENABLE_LOADER = "LOADING_ENABLE_LOADER";
+export const LOADING_DISABLE_LOADER = "LOADING_DISABLE_LOADER";
+//TOAST
+export const ENABLE_SNACKBAR = "ENABLE_SNACKBAR";
+export const DISABLE_SNACKBAR = "DISABLE_SNACKBAR";
+//Loading
