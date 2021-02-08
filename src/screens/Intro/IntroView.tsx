@@ -25,7 +25,7 @@ const IntroView:React.FC<props> = (props) => {
 
   return (
     <View>
-      <Text>Start</Text>
+      <Text>Startssss</Text>
     </View>
   );
 };

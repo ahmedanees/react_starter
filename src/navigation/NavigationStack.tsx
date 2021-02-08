@@ -9,11 +9,14 @@ import {enableScreens} from 'react-native-screens';
 import Intro from '../screens/Intro';
 import BottomTab from './BottomTab';
 import {reducerState} from '../utils/types';
-const AppStack = createStackNavigator();
-const AuthStack = createStackNavigator();
+
+const ApplicationStack  = createStackNavigator();
+const AppStack          = createStackNavigator();
+const AuthStack         = createStackNavigator();
+
 const MaterialBottomTab = createBottomTabNavigator();
-const ApplicationStack = createStackNavigator();
-const DrawerStack = createDrawerNavigator();
+
+const DrawerStack       = createDrawerNavigator();
 enableScreens();
 
 const MaterialBottomTabScreens = () => {
