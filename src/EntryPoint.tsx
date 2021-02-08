@@ -9,6 +9,8 @@ import {Provider} from 'react-redux';
 import {Root} from 'native-base';
 import {persistor, store} from './store/store';
 import {PersistGate} from 'redux-persist/integration/react';
+import { useDarkMode } from "react-native-dark-mode";
+
 import splash from './screens/SplashScreen';
 import SplashScreen from 'react-native-splash-screen';
 import codePush from 'react-native-code-push';
