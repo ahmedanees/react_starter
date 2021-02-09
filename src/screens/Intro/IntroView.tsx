@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useDispatch, useSelector } from "react-redux";
 //import styles from './styles';
 //import {ScrollView, View, Text, Image, ImageBackground} from 'react-native';
 
 import {
+  
   Switch,
   StyleSheet,
   TextInput,
@@ -31,6 +32,7 @@ import { t, color } from 'react-native-tailwindcss';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import { useForm, Controller } from 'react-hook-form';
 
 interface props{
 }
@@ -45,6 +47,26 @@ const IntroView:React.FC<props> = (props) => {
   const email = useSelector((state:reducerState) => state.auth.email);
   const user_data = useSelector((state:reducerState) => state.auth.user_data);
   const [isBillingDifferent, setIsBillingDifferent] = useState(false);
+  // export default function App() {
+  const { handleSubmit, control, errors } = useForm();
+  useEffect(() => {
+    fetchUser();
+  }, []);
+  
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(
+        'https://jsonplaceholder.typicode.com/users/1'
+      );
+      const { name, email } = await response.json();
+      //setValue('name', name);
+      //setValue('email', email);
+    } catch (error) {}
+  };
+  // After the last import statement
+  const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+
 
   const toggleBilling = () => {
     setIsBillingDifferent((prev) => !prev);
@@ -61,8 +83,17 @@ const IntroView:React.FC<props> = (props) => {
   };
   return (
     <View style={styles.container}>
-    <Input placeholder="Name" />
-    <Input placeholder="Email" />
+    <Input placeholder="Name" error={errors.name}
+    errorText={errors?.name?.message} rules={{
+      required: { value: true, message: 'Name is required' }
+    }}/>
+    <Input placeholder="Email" error={errors.email}
+    errorText={errors?.email?.message} rules={{
+    required: { value: true, message: 'Email is required' },pattern: {
+      value: EMAIL_REGEX,
+      message: 'Not a valid email'
+    }
+    }}/>
     <View style={styles.switch}>
       <Text style={styles.switchText}>Billing different</Text>
       <Switch
