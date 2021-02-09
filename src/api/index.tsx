@@ -18,7 +18,8 @@ export default async function api(
   method: string,
   token: string,
 ) {
-  token = await getAuthToken();
+  token = "2324343434" ; 
+  console.log("token", token)
  let options = {
     headers: {
       'Content-Type': 'application/json',
@@ -27,15 +28,21 @@ export default async function api(
     method: method,
     ...(params && {body: JSON.stringify(params)}),
   };
-  console.log('options', path, options);
-  return fetch(path, options)
-    .then(resp => {
-      resp.json();
-      console.log('res', resp.json());
-    })
-    .then(json => json)
-    .catch(error => {
-      error;
-      console.log('error', error);
-    });
+  console.log('path', path);
+  console.log('options', options);
+
+   let fetch_result =  await fetch(path, options)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        //Hide Loader
+        console.log(responseJson);
+       return responseJson
+      })
+      .catch((error) => {
+        //Hide Loader
+        console.error(error);
+        return error
+      });
+      console.log("fetch_result",fetch_result)
+      return fetch_result;
 }

@@ -13,17 +13,21 @@ export default function* loginAsync(action:requestAction) {
 
   //how to call api
   let response = yield call(loginUser, action.data);
-
+  console.log("saga data", action)
   response = response;
-  console.log("response login saga", response);
+  
+  let email = response.user_data.email;
+  console.log("response login saga", response.user_data.email);
 
   if (response && response.status == true) {
-    AsyncStorage.setItem("@token", response.result.token);
+    AsyncStorage.setItem("@token", response.token);
     yield put(loadingAction.disableLoading());
+
+    console.log("Login saga file no 26", action.data.email)
     yield put(
       authActions.onLoginResponse({
-        email: action.data.Email,
-        token: response.result.token
+        email: action.data.email,
+        token: response.token
       })
     );
     yield call(navigationActions.navigateToHome,"");

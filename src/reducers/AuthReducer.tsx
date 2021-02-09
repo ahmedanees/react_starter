@@ -17,10 +17,11 @@ const initialState:authState = {
 const loginReducer = (state = initialState, action:responseAction) => {
   switch (action.type) {
     case types.LOGIN_RESPONSE: {
+      console.log("autho reducers 20",action.response)
       return {
         ...state,
-        email: action.payload.email,
-        token: action.payload.token,
+        email: action.response.email,
+        token: action.response.token,
         isLoggedIn: true
       };
     }
@@ -35,7 +36,7 @@ const loginReducer = (state = initialState, action:responseAction) => {
         isLoggedIn: true
       };
     }
-    case types.REGISTER_RESPONSE: {
+    case types.LOGOUT: {
       return {
         ...state,
         username: "",

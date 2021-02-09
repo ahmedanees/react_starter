@@ -1,79 +1,6 @@
-// import React, {useRef, useState} from 'react';
-// import {Text, View, StyleSheet} from 'react-native';
-// interface props{
-// }
-
-// const SplashView:React.FC<props> = (props) => {
-//   return (
-//     <View
-//       style={{
-//         backgroundColor: 'red',
-//         flex: 1,
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//       }}>
-//       <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>
-//         SetUpssssssssssassa
-//       </Text>
-//     </View>
-//   );
-// };
-
-
-
-// import React, {useState, useEffect} from 'react';
-// import {
-//   ActivityIndicator,
-//   View,
-//   StyleSheet,
-//   Image
-// } from 'react-native';
-
-
-// const SplashView = ({navigation}) => {
-//   //State for ActivityIndicator animation
-//   const [animating, setAnimating] = useState(true);
-
-//   useEffect(() => {
-//     setTimeout(() => {
-//       console.log("Hello mans")
-//       setAnimating(false);
-      
-//     }, 5000);
-//   }, []);
-
-//   return (
-//     <View style={styles.container}>
-//       <Image
-//         source={require('../../../assets/images/logo.png')}
-//         style={{width: '90%', resizeMode: 'contain', margin: 30}}
-//       />
-//       <ActivityIndicator
-//         animating={animating}
-//         color="#FFFFFF"
-//         size="large"
-//         style={styles.activityIndicator}
-//       />
-//     </View>
-//   );
-// };
-
-// export default SplashView;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     backgroundColor: 'black',
-//   },
-//   activityIndicator: {
-//     alignItems: 'center',
-//     height: 80,
-//   },
-// });
-
 import React, {useState, createRef} from 'react';
+import { useDispatch, useSelector } from "react-redux";
+
 import {
   StyleSheet,
   TextInput,
@@ -85,21 +12,28 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
+import { useForm } from "react-hook-form";
+
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { loginRequest } from "../../actions/authActions";
+
 
 //import AsyncStorage from '@react-native-community/async-storage';
 
 //import Loader from './Components/Loader';
 
-// const LoginView = ({navigation}) => {
 const LoginView = (props) => {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  
 
-    
+  //   const onSubmit = values => {
+  //     dispatch(loginRequest(values));
+  //  };
 
   const passwordInputRef = createRef();
 
@@ -115,53 +49,11 @@ const LoginView = (props) => {
     }
     setLoading(true);
     let dataToSend = {
-          user_email: userEmail,
-          user_password: userPassword
+          email: userEmail,
+          password: userPassword
         };
-    let formBody = [];
-    for (let key in dataToSend) {
-      let encodedKey = encodeURIComponent(key);
-      let encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
-    }
-    formBody = formBody.join('&');
-
-    fetch('https://uat.xcarta.com/api/v1/login', {
-      method: 'POST',
-      body: {
-        email: 'ahmed@gmail.com',
-        password: 'password'
-      },
-      headers: {
-        //Header Defination
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        //Hide Loader
-        setLoading(false);
-        console.log(responseJson);
-        alert(responseJson.status)
-        // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          AsyncStorage.setItem(
-            'user_id',
-             responseJson.data[0].user_id
-          );
-          console.log(responseJson.data[0].user_id);
-          navigation.replace('DrawerNavigationRoutes');
-        } else {
-          setErrortext('Please check your email id or password');
-          console.log('Please check your email id or password');
-        }
-      })
-      .catch((error) => {
-        //Hide Loader
-        setLoading(false);
-        console.error(error);
-      });
+      console.log("data to send from Login view",dataToSend)
+      dispatch(loginRequest(dataToSend));
   };
 
   return (
@@ -174,6 +66,7 @@ const LoginView = (props) => {
           justifyContent: 'center',
           alignContent: 'center',
         }}>
+       
         <View>
           <KeyboardAvoidingView enabled>
             <View style={{alignItems: 'center'}}>
