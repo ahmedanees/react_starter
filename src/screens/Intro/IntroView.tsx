@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 //import {ScrollView, View, Text, Image, ImageBackground} from 'react-native';
 
 import {
+  Switch,
   StyleSheet,
   TextInput,
   View,
@@ -26,6 +27,11 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { logOut } from "../../actions/authActions";
 import LogoutButton from "../../components/LogoutButton"
 
+import { t, color } from 'react-native-tailwindcss';
+
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+
 interface props{
 }
 
@@ -38,6 +44,12 @@ const IntroView:React.FC<props> = (props) => {
   const language = useSelector((state:reducerState) => state.app.language);
   const email = useSelector((state:reducerState) => state.auth.email);
   const user_data = useSelector((state:reducerState) => state.auth.user_data);
+  const [isBillingDifferent, setIsBillingDifferent] = useState(false);
+
+  const toggleBilling = () => {
+    setIsBillingDifferent((prev) => !prev);
+  };
+
 
   const i18 = (key:string) => {
     return t(key);
@@ -48,18 +60,44 @@ const IntroView:React.FC<props> = (props) => {
       dispatch(logOut());
   };
   return (
-    <View>
-            <Text style={styles.registerTextStyle}>
-                Hi {user_data.author_name}
-            </Text>
-            <LogoutButton />
+    <View style={styles.container}>
+    <Input placeholder="Name" />
+    <Input placeholder="Email" />
+    <View style={styles.switch}>
+      <Text style={styles.switchText}>Billing different</Text>
+      <Switch
+        trackColor={{ false: color.gray200, true: color.green600 }}
+        thumbColor={color.gray100}
+        ios_backgroundColor={color.gray800}
+        onValueChange={toggleBilling}
+        value={isBillingDifferent}
+      />
     </View>
+    {isBillingDifferent && (
+      <>
+        <Input placeholder="Billing name" />
+        <Input placeholder="Billing email" />
+      </>
+    )}
+    <Button label="Submit" />
+    <LogoutButton />
+  </View>
+    // <View>
+    //         <Text style={styles.registerTextStyle}>
+    //             Hi {user_data.author_name}
+    //         </Text>
+    //         <LogoutButton />
+    // </View>
   );
 };
 export default withTheme(IntroView);
 
-
-const styles = StyleSheet.create({
+const styles = {
+  container: [t.flex1, t.justifyCenter, t.itemsCenter, t.p6, t.bgGray200],
+  switch: [t.mB4, t.selfStart, t.flexRow, t.itemsCenter],
+  switchText: [t.textBase, t.mR3, t.textGray800]
+};
+const stylesw = StyleSheet.create({
   mainBody: {
     flex: 1,
     justifyContent: 'center',
