@@ -16,8 +16,8 @@ export default function* loginAsync(action:requestAction) {
   console.log("saga data", action)
   response = response;
   
-  let email = response.user_data.email;
-  console.log("response login saga", response.user_data.email);
+  //let email = response.user_data.email;
+  console.log("response login saga", response);
 
   if (response && response.status == true) {
     AsyncStorage.setItem("@token", response.token);
@@ -27,7 +27,9 @@ export default function* loginAsync(action:requestAction) {
     yield put(
       authActions.onLoginResponse({
         email: action.data.email,
-        token: response.token
+        token: response.token,
+        user_data: response.user_data,
+
       })
     );
     yield call(navigationActions.navigateToHome,"");

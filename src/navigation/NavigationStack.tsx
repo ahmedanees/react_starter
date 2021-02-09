@@ -45,7 +45,24 @@ const MainStackScreens = () => {
 const DrawerStackScreens = () => {
   return (
     <DrawerStack.Navigator initialRouteName="Home">
-      <DrawerStack.Screen name="Home" component={MainStackScreens} />
+      <DrawerStack.Screen name="Home" component={MainStackScreens}
+       options={{
+        title: 'Home', //Set Header Title
+        headerLeft: () => (
+          <MainStackScreens />
+        ),
+        headerRight: () => (
+          <MainStackScreens  />
+        ),
+        headerStyle: {
+          backgroundColor: '#307ecc', //Set Header color
+        },
+        headerTintColor: '#fff', //Set Header text color
+        headerTitleStyle: {
+          fontWeight: 'bold', //Set Header text style
+        },
+      }}/>
+      <DrawerStack.Screen name="Profile" component={MainStackScreens} />
     </DrawerStack.Navigator>
   );
 };

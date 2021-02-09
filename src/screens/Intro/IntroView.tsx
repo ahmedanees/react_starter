@@ -24,6 +24,7 @@ import { useTheme } from '@react-navigation/native';
 import { reducerState } from '../../utils/types';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { logOut } from "../../actions/authActions";
+import LogoutButton from "../../components/LogoutButton"
 
 interface props{
 }
@@ -35,25 +36,23 @@ const IntroView:React.FC<props> = (props) => {
   const dispatch = useDispatch();
 
   const language = useSelector((state:reducerState) => state.app.language);
+  const email = useSelector((state:reducerState) => state.auth.email);
+  const user_data = useSelector((state:reducerState) => state.auth.user_data);
 
   const i18 = (key:string) => {
     return t(key);
   };
   console.log('home', t('Tabs.home'));
+  console.log("User obj",user_data)
   const handleLogout = () => {
-      //navigation.navigate('signup')
       dispatch(logOut());
   };
   return (
     <View>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              activeOpacity={0.5}
-              onPress={handleLogout}>
-              <Text style={styles.buttonTextStyle}>
-                LOGOUT
-              </Text>
-            </TouchableOpacity>
+            <Text style={styles.registerTextStyle}>
+                Hi {user_data.author_name}
+            </Text>
+            <LogoutButton />
     </View>
   );
 };
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
     borderColor: '#dadae8',
   },
   registerTextStyle: {
-    color: '#FFFFFF',
+    color: 'black',
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 14,

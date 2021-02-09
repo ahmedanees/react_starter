@@ -30,7 +30,13 @@ const LoginView = (props) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   
-
+  // let email = AsyncStorage.getItem('email').then((email) => {
+  //   if(email){
+  //     useState({email: email});
+  //       console.log(this.state.email);
+  //   }
+  // });
+  
   //   const onSubmit = values => {
   //     dispatch(loginRequest(values));
   //  };

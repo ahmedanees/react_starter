@@ -22,6 +22,7 @@ const loginReducer = (state = initialState, action:responseAction) => {
         ...state,
         email: action.response.email,
         token: action.response.token,
+        user_data:action.response.user_data,
         isLoggedIn: true
       };
     }
