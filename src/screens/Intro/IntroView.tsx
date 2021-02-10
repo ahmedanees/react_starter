@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 //import {ScrollView, View, Text, Image, ImageBackground} from 'react-native';
 
 import {
-  
+  Button,
   Switch,
   StyleSheet,
   TextInput,
@@ -31,27 +31,17 @@ import LogoutButton from "../../components/LogoutButton"
 import { t, color } from 'react-native-tailwindcss';
 
 import Input from '../../components/Input';
-import Button from '../../components/Button';
+//import Button from '../../components/Button';
 import { useForm, Controller } from 'react-hook-form';
 
-interface props{
-}
+type FormData = {
+  firstName: string;
+  lastName: string;
+};
 
 const IntroView:React.FC<props> = (props) => {
-  const {colors, fonts, screen} = useTheme();
-  const [t, i18n] = useTranslation();
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
+  const { control, handleSubmit, errors } = useForm();
 
-  const language = useSelector((state:reducerState) => state.app.language);
-  const email = useSelector((state:reducerState) => state.auth.email);
-  const user_data = useSelector((state:reducerState) => state.auth.user_data);
-  const [isBillingDifferent, setIsBillingDifferent] = useState(false);
-  // export default function App() {
-  const { handleSubmit, control, errors } = useForm();
-  useEffect(() => {
-    fetchUser();
-  }, []);
   
   const fetchUser = async () => {
     try {
@@ -67,52 +57,57 @@ const IntroView:React.FC<props> = (props) => {
   const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
-
-  const toggleBilling = () => {
-    setIsBillingDifferent((prev) => !prev);
-  };
-
-
-  const i18 = (key:string) => {
-    return t(key);
-  };
-  console.log('home', t('Tabs.home'));
-  console.log("User obj",user_data)
-  const handleLogout = () => {
-      dispatch(logOut());
-  };
+  const MyInput = ({ label, register, required }) => ( 
+    <>
+      <label>{label}</label>
+      <input name={label} ref={register({ required })} />
+    </>
+  );
+  
   return (
-    <View style={styles.container}>
-    <Input placeholder="Name" error={errors.name}
-    errorText={errors?.name?.message} rules={{
-      required: { value: true, message: 'Name is required' }
-    }}/>
-    <Input placeholder="Email" error={errors.email}
-    errorText={errors?.email?.message} rules={{
-    required: { value: true, message: 'Email is required' },pattern: {
-      value: EMAIL_REGEX,
-      message: 'Not a valid email'
-    }
-    }}/>
-    <View style={styles.switch}>
-      <Text style={styles.switchText}>Billing different</Text>
-      <Switch
-        trackColor={{ false: color.gray200, true: color.green600 }}
-        thumbColor={color.gray100}
-        ios_backgroundColor={color.gray800}
-        onValueChange={toggleBilling}
-        value={isBillingDifferent}
-      />
-    </View>
-    {isBillingDifferent && (
-      <>
-        <Input placeholder="Billing name" />
-        <Input placeholder="Billing email" />
-      </>
-    )}
-    <Button label="Submit" />
-    <LogoutButton />
-  </View>
+    <View style={styles.mainBody}>
+       
+        <Controller
+          control={control}
+          render={({ onChange, onBlur, value }) => (
+            <TextInput
+              
+              style={styles.inputStyle}
+              onBlur={onBlur}
+              onChangeText={value => onChange(value)}
+              value={value}
+            />
+          )}
+          name="firstName"
+          rules={{ required: true }}
+          defaultValue=""
+        />
+       
+        {errors.firstName && <Text>First Name is required.</Text>}
+        
+        <Controller
+          control={control}
+          render={({ onChange, onBlur, value }) => (
+            <TextInput
+              style={{paddingHorizontal: 20, borderWidth: 1, paddingVertical: 8}}
+              onBlur={onBlur}
+              onChangeText={value => onChange(value)}
+              value={value}
+            />
+          )}
+          name="lastName"
+          rules={{ required: true, minLength: 8}}
+          defaultValue=""
+        />
+
+        {errors.lastName?.type === "required" && <Text>Last Name is required.</Text>}
+
+        {errors.lastName?.type === "minLength" && <Text>Minimum 8 characters are required</Text>}
+
+        <Button title="Submit" onPress={handleSubmit((data) => console.log(data))} />
+        
+      </View>
+    
     // <View>
     //         <Text style={styles.registerTextStyle}>
     //             Hi {user_data.author_name}
