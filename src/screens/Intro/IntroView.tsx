@@ -35,8 +35,8 @@ import Input from '../../components/Input';
 import { useForm, Controller } from 'react-hook-form';
 
 type FormData = {
-  firstName: string;
-  lastName: string;
+  email: string;
+  password: string;
 };
 
 const IntroView:React.FC<props> = (props) => {
@@ -57,57 +57,47 @@ const IntroView:React.FC<props> = (props) => {
   const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
-  const MyInput = ({ label, register, required }) => ( 
-    <>
-      <label>{label}</label>
-      <input name={label} ref={register({ required })} />
-    </>
-  );
   
   return (
-    <View style={styles.mainBody}>
-       
-        <Controller
-          control={control}
-          render={({ onChange, onBlur, value }) => (
-            <TextInput
-              
-              style={styles.inputStyle}
-              onBlur={onBlur}
-              onChangeText={value => onChange(value)}
-              value={value}
-            />
-          )}
-          name="firstName"
-          rules={{ required: true }}
-          defaultValue=""
+    <View>
+    <Controller
+      control={control}
+      render={({ onChange, onBlur, value }) => (
+        <TextInput
+          style={{paddingHorizontal: 20, borderWidth: 1, paddingVertical: 8}}
+          onBlur={onBlur}
+          onChangeText={value => onChange(value)}
+          value={value}
         />
-       
-        {errors.firstName && <Text>First Name is required.</Text>}
-        
-        <Controller
-          control={control}
-          render={({ onChange, onBlur, value }) => (
-            <TextInput
-              style={{paddingHorizontal: 20, borderWidth: 1, paddingVertical: 8}}
-              onBlur={onBlur}
-              onChangeText={value => onChange(value)}
-              value={value}
-            />
-          )}
-          name="lastName"
-          rules={{ required: true, minLength: 8}}
-          defaultValue=""
+      )}
+      name="email"
+      rules={{ required: true }}
+      defaultValue=""
+    />
+    {errors.email && <Text>email is required.</Text>}
+
+    <Controller
+      control={control}
+      render={({ onChange, onBlur, value }) => (
+        <TextInput
+          style={{paddingHorizontal: 20, borderWidth: 1, paddingVertical: 8}}
+          onBlur={onBlur}
+          onChangeText={value => onChange(value)}
+          value={value}
         />
+      )}
+      name="lastName"
+      rules={{ required: true, minLength: 8}}
+      defaultValue=""
+    />
 
-        {errors.lastName?.type === "required" && <Text>Last Name is required.</Text>}
+    {errors.lastName?.type === "required" && <Text>Last Name is required.</Text>}
 
-        {errors.lastName?.type === "minLength" && <Text>Minimum 8 characters are required</Text>}
+    {errors.lastName?.type === "minLength" && <Text>Minimum 8 characters are required</Text>}
 
-        <Button title="Submit" onPress={handleSubmit((data) => console.log(data))} />
-        
-      </View>
-    
+    <Button title="Submit" onPress={handleSubmit((data) => console.log(data))} />
+    <LogoutButton />
+  </View>
     // <View>
     //         <Text style={styles.registerTextStyle}>
     //             Hi {user_data.author_name}
