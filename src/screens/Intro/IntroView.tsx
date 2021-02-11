@@ -1,170 +1,228 @@
-/* eslint-disable react/prop-types */
-import React, {useEffect, useState} from 'react';
-import { useDispatch, useSelector, FlatList } from "react-redux";
-//import styles from './styles';
-//import {ScrollView, View, Text, Image, ImageBackground} from 'react-native';
+import React from 'react';
+import { Text, View, Button, StyleSheet, Dimensions, Platform } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import EbookTile from './EbookTitle';
 
-import {
-  Button,
-  Switch,
-  StyleSheet,
-  TextInput,
-  View,
-  Text,
-  ScrollView,
-  Image,
-  Keyboard,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-} from 'react-native';
 
-import {withTheme} from 'react-native-paper';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-//import {TouchableOpacity} from 'react-native-gesture-handler';
-import {initReactI18next, useTranslation} from 'react-i18next';
-import { useTheme } from '@react-navigation/native';
-import { reducerState } from '../../utils/types';
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { logOut } from "../../actions/authActions";
-import LogoutButton from "../../components/LogoutButton"
 
-import { t, color } from 'react-native-tailwindcss';
 
-import Input from '../../components/Input';
-//import Button from '../../components/Button';
-import { useForm, Controller } from 'react-hook-form';
-import axios from 'axios';
+		
 
-type FormData = {
-  email: string;
-  password: string;
-};
+//Returns true if the screen is in portrait mode
+const isPortrait = () => {
+	const dim = Dimensions.get('screen');
+	return dim.height >= dim.width;
+	};
 
-const IntroView:React.FC<props> = (props) => {
-  const { control, handleSubmit, errors } = useForm();
-  const [book_data, setData] = useState([]);
-  //https://www.robinwieruch.de/react-hooks-fetch-data
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios(
-        'https://uat.xcarta.com/api/v1/my_save_media/1',
-      );
-        console.log(result)
-      setData(result.data.books);
-    };
- 
-    fetchData();
-  }, []);
- 
-  console.log(book_data);
-  return (
-    <>
-    <View>
-    <Controller
-      control={control}
-      render={({ onChange, onBlur, value }) => (
-        <TextInput
-          style={{paddingHorizontal: 20, borderWidth: 1, paddingVertical: 8}}
-          onBlur={onBlur}
-          onChangeText={value => onChange(value)}
-          value={value}
-        />
-      )}
-      name="email"
-      rules={{ required: true }}
-      defaultValue=""
-    />
-    {errors.email && <Text>email is required.</Text>}
 
-    <Controller
-      control={control}
-      render={({ onChange, onBlur, value }) => (
-        <TextInput
-          style={{paddingHorizontal: 20, borderWidth: 1, paddingVertical: 8}}
-          onBlur={onBlur}
-          onChangeText={value => onChange(value)}
-          value={value}
-        />
-      )}
-      name="lastName"
-      rules={{ required: true, minLength: 8}}
-      defaultValue=""
-    />
 
-    {errors.lastName?.type === "required" && <Text>Last Name is required.</Text>}
 
-    {errors.lastName?.type === "minLength" && <Text>Minimum 8 characters are required</Text>}
+class IntroView extends React.Component {
+	constructor(props) {
+		super(props);
 
-    <Button title="Submit" onPress={handleSubmit((data) => console.log(data))} />
-    <LogoutButton />
-  </View>
-    <View>
-      listnpm  
-    </View>
-    </>
-  );
-};
-export default withTheme(IntroView);
+		this.state = {
+		orientation: isPortrait() ? 'portrait' : 'landscape',
+		data:[],
+		isLoading: true
+		};
 
-const styles = {
-  container: [t.flex1, t.justifyCenter, t.itemsCenter, t.p6, t.bgGray200],
-  switch: [t.mB4, t.selfStart, t.flexRow, t.itemsCenter],
-  switchText: [t.textBase, t.mR3, t.textGray800]
-};
-const stylesw = StyleSheet.create({
-  mainBody: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'black',
-    alignContent: 'center',
-  },
-  SectionStyle: {
-    flexDirection: 'row',
-    height: 40,
-    marginTop: 20,
-    marginLeft: 35,
-    marginRight: 35,
-    margin: 10,
-  },
-  buttonStyle: {
-    backgroundColor: '#7DE24E',
-    borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#7DE24E',
-    height: 40,
-    alignItems: 'center',
-    borderRadius: 30,
-    marginLeft: 35,
-    marginRight: 35,
-    marginTop: 20,
-    marginBottom: 25,
-  },
-  buttonTextStyle: {
-    color: '#FFFFFF',
-    paddingVertical: 10,
-    fontSize: 16,
-  },
-  inputStyle: {
-    flex: 1,
-    color: 'white',
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderWidth: 1,
-    borderRadius: 30,
-    borderColor: '#dadae8',
-  },
-  registerTextStyle: {
-    color: 'black',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 14,
-    alignSelf: 'center',
-    padding: 10,
-  },
-  errorTextStyle: {
-    color: 'red',
-    textAlign: 'center',
-    fontSize: 14,
-  },
+		
+		
+	}
+
+	componentDidMount() {
+		//get Books
+		fetch('https://uat.xcarta.com//api/v1/my_save_media/1')
+		.then((response) => response.json() )
+		.then( (json) => {
+			this.setState({ data: json.books })
+		})
+		.catch( (error) => {
+			console.error(error)
+		})
+		.finally(() => {
+			this.setState( {isLoading:false} )
+		});
+
+		// Event Listener for orientation changes
+		Dimensions.addEventListener('change', () => {
+			this.setState({
+				orientation: isPortrait() ? 'portrait' : 'landscape'
+			});
+		});
+	}
+
+	componentWillUnmount() {
+		Dimensions.removeEventListener('change',
+			this.setState({
+				orientation: isPortrait() ? 'portrait' : 'landscape'
+			})
+		)
+	}
+
+	
+	render() {
+		const { navigation } = this.props;
+		const { data } = this.state;
+
+		let booksArray = data.map( (book, i) => {
+
+			return <EbookTile style={styles.ebookTile} data={book} key={i} count={i} ></EbookTile>
+
+		});
+
+		
+
+		
+
+		 /* let booksArray = data.map( (book, i) => {
+			if (i == 0 ) {
+				return ([
+					<View style={styles.ebookLibraryRow}>,
+					<EbookTile style={styles.ebookTile} data={book} key={i} count={i} ></EbookTile>
+					])
+			} else if ( (i)%4 == 0 ){
+				return ([
+					</View>,
+					<View style={styles.ebookLibraryRow}>,
+					<EbookTile style={styles.ebookTile} data={book} key={i} count={i} ></EbookTile>
+				])
+			} else if ( i == books.Array.length ) {
+				return ([
+					<EbookTile style={styles.ebookTile} data={book} key={i} count={i} ></EbookTile>,
+					</View>
+				])
+			} else {
+				return (<EbookTile style={styles.ebookTile} data={book} key={i} count={i} ></EbookTile>)
+			}
+
+
+			
+
+			
+		}); */
+		
+
+		
+
+
+		if (this.state.orientation === 'portrait') {
+			return (
+				<View style={styles.container}>
+					{/* <Text>LIBRARY SCREEN</Text>
+					<Button 
+						title="Go to Ebook Detail"
+						onPress={() => navigation.navigate('Detail')}
+					/>
+					<Button 
+						title="Go to Reader"
+						onPress={() => navigation.navigate('Reader')}
+					/> */}
+					<View style={{flex:1, justifyContent:"center", alignItems: "center", width:"100%"}}>
+						<ScrollView style={styles.ebookLibraryWrapper} contentContainerStyle={{}}>
+
+						<View style={styles.ebookLibraryRow}>
+							{booksArray[0]}
+							{booksArray[1]}
+							{booksArray[2]}
+							{booksArray[3]}
+						
+						</View>
+						<View style={styles.ebookLibraryRow}>
+						{booksArray[4]}
+						{booksArray[5]}
+						{booksArray[6]}
+						{booksArray[7]}
+						</View>
+						<View style={styles.ebookLibraryRow}>
+						{booksArray[8]}
+						{booksArray[9]}
+						{booksArray[10]}
+						{booksArray[11]}
+
+						</View>
+						<View style={styles.ebookLibraryRow}>
+						{booksArray[12]}
+						{booksArray[13]}
+						{booksArray[14]}
+						{booksArray[15]}
+
+						</View>
+							
+							
+						
+							
+							
+
+							
+							
+						</ScrollView>
+					</View>
+				</View>
+			);
+		} else {
+			return (
+				<View style={styles.container}>
+					<Text>LIBRARY SCREEN</Text>
+					<Button 
+						title="Go to Ebook Detail"
+						onPress={() => navigation.navigate('Detail', routeData)}
+					/>
+					<View style={{flex:1, justifyContent:"center", alignItems: "center", width:"100%"}}>
+						<ScrollView style={styles.ebookLibraryWrapper} contentContainerStyle={{}}>
+							<View style={styles.ebookLibraryRow}>
+								<EbookTile style={styles.ebookTile}></EbookTile>
+								<EbookTile style={styles.ebookTile}></EbookTile>
+								<EbookTile style={styles.ebookTile}></EbookTile>
+								<EbookTile style={styles.ebookTile}></EbookTile>
+								<EbookTile style={styles.ebookTile}></EbookTile>
+								<EbookTile style={styles.ebookTile}></EbookTile>
+							</View>
+							<View style={styles.ebookLibraryRow}>
+								<EbookTile style={styles.ebookTile}></EbookTile>
+								<EbookTile style={styles.ebookTile}></EbookTile>
+								<EbookTile style={styles.ebookTile}></EbookTile>
+								
+							</View>
+							
+						</ScrollView>
+					</View>
+				</View>
+			);
+		}
+	}
+}
+
+
+const styles = StyleSheet.create({
+	container: {
+		flex:1,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: '#FCFCFC',
+		padding:0,
+		paddingTop:30
+	},
+	ebookLibraryWrapper : {
+		flex:1,
+		width: "100%",
+		flexDirection: "column",
+		paddingLeft:35
+		
+	},
+	ebookLibraryRow: {
+		flex:1,
+		flexDirection: "row",
+		justifyContent: "flex-start",
+		alignItems: "center",
+		marginBottom: 33,
+		marginRight: "auto"
+	},
+	ebookTile: {
+		
+	}
 });
+
+export default IntroView;
