@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, {useEffect, useState} from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, FlatList } from "react-redux";
 //import styles from './styles';
 //import {ScrollView, View, Text, Image, ImageBackground} from 'react-native';
 
@@ -33,6 +33,7 @@ import { t, color } from 'react-native-tailwindcss';
 import Input from '../../components/Input';
 //import Button from '../../components/Button';
 import { useForm, Controller } from 'react-hook-form';
+import axios from 'axios';
 
 type FormData = {
   email: string;
@@ -41,24 +42,24 @@ type FormData = {
 
 const IntroView:React.FC<props> = (props) => {
   const { control, handleSubmit, errors } = useForm();
+  const [book_data, setData] = useState([]);
+  //https://www.robinwieruch.de/react-hooks-fetch-data
 
-  
-  const fetchUser = async () => {
-    try {
-      const response = await fetch(
-        'https://jsonplaceholder.typicode.com/users/1'
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(
+        'https://uat.xcarta.com/api/v1/my_save_media/1',
       );
-      const { name, email } = await response.json();
-      //setValue('name', name);
-      //setValue('email', email);
-    } catch (error) {}
-  };
-  // After the last import statement
-  const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-
-  
+        console.log(result)
+      setData(result.data.books);
+    };
+ 
+    fetchData();
+  }, []);
+ 
+  console.log(book_data);
   return (
+    <>
     <View>
     <Controller
       control={control}
@@ -98,12 +99,10 @@ const IntroView:React.FC<props> = (props) => {
     <Button title="Submit" onPress={handleSubmit((data) => console.log(data))} />
     <LogoutButton />
   </View>
-    // <View>
-    //         <Text style={styles.registerTextStyle}>
-    //             Hi {user_data.author_name}
-    //         </Text>
-    //         <LogoutButton />
-    // </View>
+    <View>
+      listnpm  
+    </View>
+    </>
   );
 };
 export default withTheme(IntroView);
