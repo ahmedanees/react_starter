@@ -1,12 +1,8 @@
 import React from 'react';
-import { Text, View, Button, StyleSheet, Dimensions, Platform } from 'react-native';
+import { Text, View, Button, StyleSheet, Dimensions, Platform , Image} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import EbookTile from './EbookTitle';
 
-
-
-
-		
 
 //Returns true if the screen is in portrait mode
 const isPortrait = () => {
@@ -14,22 +10,14 @@ const isPortrait = () => {
 	return dim.height >= dim.width;
 	};
 
-
-
-
-
 class IntroView extends React.Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 		orientation: isPortrait() ? 'portrait' : 'landscape',
 		data:[],
 		isLoading: true
 		};
-
-		
-		
 	}
 
 	componentDidMount() {
@@ -46,6 +34,7 @@ class IntroView extends React.Component {
 			this.setState( {isLoading:false} )
 		});
 
+    
 		// Event Listener for orientation changes
 		Dimensions.addEventListener('change', () => {
 			this.setState({
@@ -62,52 +51,58 @@ class IntroView extends React.Component {
 		)
 	}
 
+ 
 	
 	render() {
-		const { navigation } = this.props;
 		const { data } = this.state;
+    var temp = [];
 
-		let booksArray = data.map( (book, i) => {
+    function EbookTile(props) {
+      if (props.data!==null && props.data.title !== undefined){
+        return (
+          <View style={[styles.container, props.style]}>
+              <Image 
+              style={styles.thumbnailImage}
+              source={{uri:props.data.image.thumb.url}}
+              />
+              <Text style={styles.title}>{props.data.title}</Text>
+              <Text style={styles.author}>{props.data.author_id}</Text>
+              <Text style={styles.author}>2002</Text>
+              <Text style={styles.annotationCount}>Annotations: {props.data.annotation_count}</Text>
+          </View>
+        )
+      }
+      else{
+        <Text>asd</Text>
+      }
 
-			return <EbookTile style={styles.ebookTile} data={book} key={i} count={i} ></EbookTile>
-
-		});
-
-		
-
-		
-
-		 /* let booksArray = data.map( (book, i) => {
-			if (i == 0 ) {
-				return ([
-					<View style={styles.ebookLibraryRow}>,
-					<EbookTile style={styles.ebookTile} data={book} key={i} count={i} ></EbookTile>
-					])
-			} else if ( (i)%4 == 0 ){
-				return ([
-					</View>,
-					<View style={styles.ebookLibraryRow}>,
-					<EbookTile style={styles.ebookTile} data={book} key={i} count={i} ></EbookTile>
-				])
-			} else if ( i == books.Array.length ) {
-				return ([
-					<EbookTile style={styles.ebookTile} data={book} key={i} count={i} ></EbookTile>,
-					</View>
-				])
-			} else {
-				return (<EbookTile style={styles.ebookTile} data={book} key={i} count={i} ></EbookTile>)
-			}
-
-
-			
-
-			
-		}); */
-		
-
-		
-
-
+      
+  }
+    //to ensure three book appear in a row
+    let  data_length = data.length;
+    for (var index     = 0; index < data_length; index = index + 3) {
+        temp.push({
+          book1: data[index],
+          book2: (index + 1) < data_length ? data[index + 1] : null,
+          book3: (index + 2) < data_length ? data[index + 2] : null
+        });
+    }
+    //console.log(temp)
+    let temp_data_length = temp.length;
+    for (var index     = 0; index < temp_data_length; index = index + 1) {
+      console.log(temp[index]['book1'])
+    } 
+      let booksArray = temp.map( (book, i) => {
+          return (
+                  <View style={styles.ebookLibraryRow}>
+                      
+                      {(book['book1'] !=null ) ? <EbookTile style={styles.ebookTile} data={book['book1']}  ></EbookTile>: null}
+                      {(book['book2'] !=null ) ? <EbookTile style={styles.ebookTile} data={book['book2']}  ></EbookTile>: null}
+                      {(book['book3'] !=null ) ? <EbookTile style={styles.ebookTile} data={book['book3']}  ></EbookTile>: null}
+                  </View>
+                )
+      }
+    );
 		if (this.state.orientation === 'portrait') {
 			return (
 				<View style={styles.container}>
@@ -122,42 +117,7 @@ class IntroView extends React.Component {
 					/> */}
 					<View style={{flex:1, justifyContent:"center", alignItems: "center", width:"100%"}}>
 						<ScrollView style={styles.ebookLibraryWrapper} contentContainerStyle={{}}>
-
-						<View style={styles.ebookLibraryRow}>
-							{booksArray[0]}
-							{booksArray[1]}
-							{booksArray[2]}
-							{booksArray[3]}
-						
-						</View>
-						<View style={styles.ebookLibraryRow}>
-						{booksArray[4]}
-						{booksArray[5]}
-						{booksArray[6]}
-						{booksArray[7]}
-						</View>
-						<View style={styles.ebookLibraryRow}>
-						{booksArray[8]}
-						{booksArray[9]}
-						{booksArray[10]}
-						{booksArray[11]}
-
-						</View>
-						<View style={styles.ebookLibraryRow}>
-						{booksArray[12]}
-						{booksArray[13]}
-						{booksArray[14]}
-						{booksArray[15]}
-
-						</View>
-							
-							
-						
-							
-							
-
-							
-							
+                  {booksArray}
 						</ScrollView>
 					</View>
 				</View>
@@ -172,20 +132,7 @@ class IntroView extends React.Component {
 					/>
 					<View style={{flex:1, justifyContent:"center", alignItems: "center", width:"100%"}}>
 						<ScrollView style={styles.ebookLibraryWrapper} contentContainerStyle={{}}>
-							<View style={styles.ebookLibraryRow}>
-								<EbookTile style={styles.ebookTile}></EbookTile>
-								<EbookTile style={styles.ebookTile}></EbookTile>
-								<EbookTile style={styles.ebookTile}></EbookTile>
-								<EbookTile style={styles.ebookTile}></EbookTile>
-								<EbookTile style={styles.ebookTile}></EbookTile>
-								<EbookTile style={styles.ebookTile}></EbookTile>
-							</View>
-							<View style={styles.ebookLibraryRow}>
-								<EbookTile style={styles.ebookTile}></EbookTile>
-								<EbookTile style={styles.ebookTile}></EbookTile>
-								<EbookTile style={styles.ebookTile}></EbookTile>
-								
-							</View>
+                 {booksArray}
 							
 						</ScrollView>
 					</View>
@@ -197,6 +144,31 @@ class IntroView extends React.Component {
 
 
 const styles = StyleSheet.create({
+  thumbnailImage: {
+    width: 162,
+    height: 226,
+    borderRadius:10
+    }, title: {
+      marginTop: 14,
+      marginBottom: 7,
+      alignSelf: "flex-start",
+      fontSize: 14,
+      lineHeight: 16,
+      color: "#0B0B0B"
+    },
+    author: {
+      alignSelf: "flex-start",
+      fontSize: 12,
+      lineHeight: 14,
+      color: "#217CE2"
+    },
+    annotationCount: {
+      alignSelf: "flex-start",
+      fontSize:12,
+      lineHeight:14,
+      color: "#9D9D9D",
+      marginTop: 6
+    },
 	container: {
 		flex:1,
 		justifyContent: "center",
